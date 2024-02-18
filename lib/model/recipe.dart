@@ -1,4 +1,5 @@
 import 'package:pokemon_sleep_guide/model/recipe_ingredient.dart';
+import 'package:pokemon_sleep_guide/utils/constants.dart';
 
 class Recipe {
   final String picture;
@@ -7,6 +8,20 @@ class Recipe {
   final List<RecipeIngredient> ingredients;
 
   Recipe(this.picture, this.name, this.description, this.ingredients);
+
+  String get pictureUrl => "${Constants.serebiiBaseUrl}$picture";
+
+  int ingredientValue(Map<String, int> userIngredient) {
+    List<int> exceeded = [0];
+    for (final ingredient in ingredients) {
+      if ((userIngredient[ingredient.name] ?? 0) >= ingredient.quantity) {
+        exceeded.add(1);
+      }
+    }
+
+    int sum = exceeded.reduce((a, b) => a + b);
+    return sum == ingredients.length ? sum + 10 : sum;
+  }
 
   Recipe.fromJson(Map<String, dynamic> json)
       : picture = json['picture'] as String,

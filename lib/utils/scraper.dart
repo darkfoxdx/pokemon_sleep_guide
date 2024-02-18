@@ -30,7 +30,8 @@ Future<Recipes?> scrapeRecipes() async {
 
 Future<List<Ingredient>> scrapeIngredients() async {
   // URL of the website to scrape
-  String actualUrl = '${Constants.serebiiBaseUrl}${Constants.serebiiIngredientsUrl}';
+  String actualUrl =
+      '${Constants.serebiiBaseUrl}${Constants.serebiiIngredientsUrl}';
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),
@@ -92,23 +93,23 @@ List<Recipe> scrapeTableAt(int position, String html) {
 
 List<dynamic> parseIngredients(String ingredientsText) {
   var ingredients = [];
-
   // Split the string by each ingredient
-  var parts = ingredientsText.split(RegExp(r'\s*(?=[A-Z])'));
+  var parts = RegExp(r'[A-Za-z]+\s?[A-Za-z]*\s\*\s\d+')
+      .allMatches(ingredientsText)
+      .map((e) => e.group(0))
+      .toList();
 
   // Iterate over each part and extract the ingredient name and quantity
   for (var part in parts) {
-    var match = RegExp(r'([A-Za-z\s]+)\s*\*\s*(\d+)').firstMatch(part);
-    if (match != null) {
-      var ingredientName = match.group(1)?.trim();
-      var quantity = int.tryParse(match.group(2) ?? '');
-      if (ingredientName != null && quantity != null) {
-        var ingredientRecipe = {
-          "name": ingredientName,
-          "quantity": quantity,
-        };
-        ingredients.add(ingredientRecipe);
-      }
+    var split = part?.split("*");
+    var ingredientName = split?.first.trim();
+    var quantity = int.tryParse(split?.last.trim() ?? '0');
+    if (ingredientName != null && quantity != null) {
+      var ingredientRecipe = {
+        "name": ingredientName,
+        "quantity": quantity,
+      };
+      ingredients.add(ingredientRecipe);
     }
   }
 

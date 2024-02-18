@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
+import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_screen.dart';
+import 'package:pokemon_sleep_guide/ui/recipe_screen.dart';
 import 'package:pokemon_sleep_guide/utils/scraper.dart';
 
 class Home extends StatefulWidget {
@@ -11,18 +13,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  Widget _buildScreen(int index, List<Ingredient> ingredients) {
+  Widget _buildScreen(
+      int index, List<Ingredient> ingredients, Recipes recipes) {
     return <Widget>[
       IngredientScreen(ingredients),
-      const Text(
-        'Index 1: Recipes',
-        style: optionStyle,
-      ),
+      RecipeScreen(ingredients, recipes),
     ][index];
   }
 
@@ -40,10 +39,12 @@ class _HomeState extends State<Home> {
           title: const Text('Pokemon Sleep'),
         ),
         body: FutureBuilder(
-            future: Future.wait([scrapeIngredients()]),
+            future: (scrapeIngredients(), scrapeRecipes()).wait,
             builder: (context, snapshot) {
+              List<Ingredient> ingredients = snapshot.data?.$1 ?? [];
+              Recipes recipes = snapshot.data?.$2 ?? Recipes.empty();
               return Center(
-                child: _buildScreen(_selectedIndex, snapshot.data?[0] ?? []),
+                child: _buildScreen(_selectedIndex, ingredients, recipes),
               );
             }),
         bottomNavigationBar: BottomNavigationBar(

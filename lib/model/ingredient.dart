@@ -12,6 +12,13 @@ class Ingredient {
   Ingredient(this.picture, this.name, this.description, this.baseStrength,
       this.sellValue);
 
+  Ingredient.empty()
+      : picture = "",
+        name = "",
+        description = "",
+        baseStrength = 0,
+        sellValue = "";
+
   Ingredient.fromJson(Map<String, dynamic> json)
       : picture = json['picture'] as String,
         name = json['name'] as String,
