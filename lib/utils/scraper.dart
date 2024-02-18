@@ -12,6 +12,10 @@ Future<Recipes?> scrapeRecipes() async {
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),
+    headers: {
+      "Access-Control-Allow-Origin": "projecteugene.com",
+      "Access-Control-Allow-Methods": "GET",
+    },
   );
 
   // Check if request was successful
@@ -35,6 +39,10 @@ Future<List<Ingredient>> scrapeIngredients() async {
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),
+    headers: {
+      "Access-Control-Allow-Origin": "projecteugene.com",
+      "Access-Control-Allow-Methods": "GET",
+    },
   );
 
   // Check if request was successful
