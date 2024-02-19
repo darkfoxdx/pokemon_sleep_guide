@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
-import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
+import 'package:pokemon_sleep_guide/model/user_setting.dart';
+import 'package:provider/provider.dart';
 
 class IngredientItem extends StatefulWidget {
   const IngredientItem(
@@ -26,17 +27,15 @@ class _IngredientItemState extends State<IngredientItem> {
   }
 
   void increaseCurrentQuantity() {
-    setState(() {
-      currentQuantity = currentQuantity + 1;
-      PreferenceUtils.setIngredient(widget.ingredient.name, currentQuantity);
-    });
+    currentQuantity = currentQuantity + 1;
+    Provider.of<UserSetting>(context, listen: false)
+        .setIngredient(widget.ingredient.name, currentQuantity);
   }
 
   void decreaseCurrentQuantity() {
-    setState(() {
-      currentQuantity = currentQuantity - 1;
-      PreferenceUtils.setIngredient(widget.ingredient.name, currentQuantity);
-    });
+    currentQuantity = currentQuantity - 1;
+    Provider.of<UserSetting>(context, listen: false)
+        .setIngredient(widget.ingredient.name, currentQuantity);
   }
 
   @override

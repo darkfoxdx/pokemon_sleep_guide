@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
+import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_screen.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_screen.dart';
 import 'package:pokemon_sleep_guide/utils/json_utils.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,14 +16,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-
-  Widget _buildScreen(
-      int index, List<Ingredient> ingredients, Recipes recipes) {
-    return <Widget>[
-      IngredientScreen(ingredients),
-      RecipeScreen(ingredients, recipes),
-    ][index];
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -42,7 +36,17 @@ class _HomeState extends State<Home> {
               List<Ingredient> ingredients = snapshot.data?.$1 ?? [];
               Recipes recipes = snapshot.data?.$2 ?? Recipes.empty();
               return Center(
-                child: _buildScreen(_selectedIndex, ingredients, recipes),
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    IngredientScreen(ingredients),
+                    Consumer<UserSetting>(
+                      builder: (context, userSetting, child) {
+                        return RecipeScreen(ingredients, recipes, userSetting.ingredients);
+                      }
+                    ),
+                  ],
+                ),
               );
             }),
         bottomNavigationBar: BottomNavigationBar(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
@@ -10,21 +9,20 @@ import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 class RecipeScreen extends StatefulWidget {
   final List<Ingredient> ingredients;
   final Recipes recipes;
+  final Map<String, int> userIngredients;
 
-  const RecipeScreen(this.ingredients, this.recipes, {super.key});
+  const RecipeScreen(this.ingredients, this.recipes, this.userIngredients, {super.key});
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
 }
 
 class _RecipeScreenState extends State<RecipeScreen> {
-  late Map<String, int> userIngredients;
   late RecipeType recipeType;
 
   @override
   void initState() {
     super.initState();
-    userIngredients = PreferenceUtils.getUserIngredients();
     recipeType = PreferenceUtils.getRecipeType();
   }
 
@@ -49,7 +47,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   @override
   Widget build(BuildContext context) {
     List<Recipe> selectedRecipe = getList(recipeType);
-    selectedRecipe.sort((b, a) => a.ingredientValue(userIngredients).compareTo(b.ingredientValue(userIngredients)));
+    selectedRecipe.sort((b, a) => a.ingredientValue(widget.userIngredients).compareTo(b.ingredientValue(widget.userIngredients)));
     return Column(
       children: [
         Padding(
@@ -114,7 +112,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                                 Expanded(
                                   child: IngredientList(
                                     recipe.ingredients,
-                                    userIngredients,
+                                    widget.userIngredients,
                                     widget.ingredients,
                                   ),
                                 ),

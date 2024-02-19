@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/home.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   // Required for async calls in `main`
@@ -61,10 +63,15 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: _buildRunnableApp(
-        isWeb: kIsWeb && defaultTargetPlatform != TargetPlatform.android &&
-      defaultTargetPlatform != TargetPlatform.iOS,
+        isWeb: kIsWeb &&
+            defaultTargetPlatform != TargetPlatform.android &&
+            defaultTargetPlatform != TargetPlatform.iOS,
         webAppWidth: 480.0,
-        app: const Home(),
+        app: ChangeNotifierProvider(
+          create: (context) =>
+              UserSetting(PreferenceUtils.getUserIngredients()),
+          child: const Home(),
+        ),
       ),
     );
   }
