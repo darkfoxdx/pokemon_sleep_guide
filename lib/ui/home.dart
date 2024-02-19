@@ -3,7 +3,7 @@ import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_screen.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_screen.dart';
-import 'package:pokemon_sleep_guide/utils/scraper.dart';
+import 'package:pokemon_sleep_guide/utils/json_utils.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,8 +14,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   Widget _buildScreen(
       int index, List<Ingredient> ingredients, Recipes recipes) {
@@ -39,7 +37,7 @@ class _HomeState extends State<Home> {
           title: const Text('Pokemon Sleep'),
         ),
         body: FutureBuilder(
-            future: (scrapeIngredients(), scrapeRecipes()).wait,
+            future: (fetchIngredients(context), fetchRecipes(context)).wait,
             builder: (context, snapshot) {
               List<Ingredient> ingredients = snapshot.data?.$1 ?? [];
               Recipes recipes = snapshot.data?.$2 ?? Recipes.empty();

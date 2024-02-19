@@ -38,7 +38,7 @@ class IngredientList extends StatelessWidget {
         alignment: PlaceholderAlignment.middle,
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 4.0),
-          child: Image.network(
+          child: Image.asset(
             picture,
             width: 24,
           ),

@@ -96,7 +96,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     children: [
                       Flexible(
                         flex: 1,
-                        child: Image.network(recipe.pictureUrl),
+                        child: Image.asset(recipe.pictureUrl),
                       ),
                       const SizedBox(width: 12),
                       Flexible(

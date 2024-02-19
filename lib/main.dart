@@ -18,6 +18,7 @@ Widget _buildRunnableApp({
   required double webAppWidth,
   required Widget app,
 }) {
+  ;
   if (!isWeb) {
     return app;
   }
@@ -60,7 +61,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: _buildRunnableApp(
-        isWeb: kIsWeb,
+        isWeb: kIsWeb && defaultTargetPlatform != TargetPlatform.android &&
+      defaultTargetPlatform != TargetPlatform.iOS,
         webAppWidth: 480.0,
         app: const Home(),
       ),

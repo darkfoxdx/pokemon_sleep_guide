@@ -1,4 +1,4 @@
-import 'package:pokemon_sleep_guide/utils/constants.dart';
+import 'package:path/path.dart';
 
 class Ingredient {
   final String picture;
@@ -7,7 +7,7 @@ class Ingredient {
   final int baseStrength;
   final String sellValue;
 
-  String get pictureUrl => "${Constants.bypassUrl}${Constants.serebiiBaseUrl}$picture";
+  String get pictureUrl => "images/${basename(picture)}";
 
   Ingredient(this.picture, this.name, this.description, this.baseStrength,
       this.sellValue);

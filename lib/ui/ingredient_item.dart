@@ -57,7 +57,7 @@ class _IngredientItemState extends State<IngredientItem> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.network(widget.ingredient.pictureUrl),
+                child: Image.asset(widget.ingredient.pictureUrl),
               ),
             ),
           ),

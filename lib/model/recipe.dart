@@ -1,5 +1,5 @@
+import 'package:path/path.dart';
 import 'package:pokemon_sleep_guide/model/recipe_ingredient.dart';
-import 'package:pokemon_sleep_guide/utils/constants.dart';
 
 class Recipe {
   final String picture;
@@ -9,7 +9,7 @@ class Recipe {
 
   Recipe(this.picture, this.name, this.description, this.ingredients);
 
-  String get pictureUrl => "${Constants.bypassUrl}${Constants.serebiiBaseUrl}$picture";
+  String get pictureUrl => "images/${basename(picture)}";
 
   int ingredientValue(Map<String, int> userIngredient) {
     List<int> exceeded = [0];
