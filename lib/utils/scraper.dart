@@ -8,14 +8,11 @@ import 'package:pokemon_sleep_guide/utils/constants.dart';
 
 Future<Recipes?> scrapeRecipes() async {
   // URL of the website to scrape
-  String actualUrl = 'https://api.allorigins.win/raw?url=${Constants.serebiiBaseUrl}${Constants.serebiiDishesUrl}';
+  String actualUrl =
+      'https://eugenelow.com/raw.php?url=${Constants.serebiiBaseUrl}${Constants.serebiiDishesUrl}';
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),
-    headers: {
-      "Access-Control-Allow-Origin": "projecteugene.com",
-      "Access-Control-Allow-Methods": "GET",
-    },
   );
 
   // Check if request was successful
@@ -35,16 +32,11 @@ Future<Recipes?> scrapeRecipes() async {
 Future<List<Ingredient>> scrapeIngredients() async {
   // URL of the website to scrape
   String actualUrl =
-      'https://api.allorigins.win/raw?url=${Constants.serebiiBaseUrl}${Constants.serebiiIngredientsUrl}';
+      'https://eugenelow.com/raw.php?url=${Constants.serebiiBaseUrl}${Constants.serebiiIngredientsUrl}';
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),
-    headers: {
-      "Access-Control-Allow-Origin": "projecteugene.com",
-      "Access-Control-Allow-Methods": "GET",
-    },
   );
-
   // Check if request was successful
   if (response.statusCode == 200) {
     // HTML content
@@ -76,12 +68,11 @@ Recipes parseHtml(String html) {
 
 List<Recipe> scrapeTableAt(int position, String html) {
   var document = parse(html);
-
   List<Recipe> recipes = [];
   var table = document.querySelectorAll('table')[position];
   table.querySelectorAll('tr').skip(1).forEach((row) {
     var columns = row.querySelectorAll('td');
-    var picture = columns[0].querySelector('img')?.attributes['src'];
+    var picture = columns[0].querySelector('img')?.attributes['src']?.replaceAll("\\\"", "") ?? "";
     var name = columns[1].text.trim();
     var description = columns[2].text.trim();
     var ingredientsText = columns[3].text.trim();
@@ -135,7 +126,7 @@ List<Ingredient> parseIngredientsTable(String html) {
     var cells = row.querySelectorAll('td');
 
     var ingredient = {
-      'picture': cells[0].querySelector('img')?.attributes['src'] ?? '',
+      'picture': cells[0].querySelector('img')?.attributes['src']?.replaceAll("\\\"", "") ?? '',
       'name': cells[1].text.trim(),
       'description': cells[2].text.trim(),
       'baseStrength': int.tryParse(cells[3].text.trim()) ?? 0,
