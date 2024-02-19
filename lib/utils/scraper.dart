@@ -9,7 +9,7 @@ import 'package:pokemon_sleep_guide/utils/constants.dart';
 Future<Recipes?> scrapeRecipes() async {
   // URL of the website to scrape
   String actualUrl =
-      'https://eugenelow.com/raw.php?url=${Constants.serebiiBaseUrl}${Constants.serebiiDishesUrl}';
+      '${Constants.bypassUrl}${Constants.serebiiBaseUrl}${Constants.serebiiDishesUrl}';
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),
@@ -32,7 +32,7 @@ Future<Recipes?> scrapeRecipes() async {
 Future<List<Ingredient>> scrapeIngredients() async {
   // URL of the website to scrape
   String actualUrl =
-      'https://eugenelow.com/raw.php?url=${Constants.serebiiBaseUrl}${Constants.serebiiIngredientsUrl}';
+      '${Constants.bypassUrl}${Constants.serebiiBaseUrl}${Constants.serebiiIngredientsUrl}';
   // Fetch HTML content
   var response = await http.get(
     Uri.parse(actualUrl),

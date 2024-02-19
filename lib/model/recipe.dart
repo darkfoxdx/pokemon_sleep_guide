@@ -9,7 +9,7 @@ class Recipe {
 
   Recipe(this.picture, this.name, this.description, this.ingredients);
 
-  String get pictureUrl => "${Constants.serebiiBaseUrl}$picture";
+  String get pictureUrl => "${Constants.bypassUrl}${Constants.serebiiBaseUrl}$picture";
 
   int ingredientValue(Map<String, int> userIngredient) {
     List<int> exceeded = [0];

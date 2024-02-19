@@ -7,7 +7,7 @@ class Ingredient {
   final int baseStrength;
   final String sellValue;
 
-  String get pictureUrl => "${Constants.serebiiBaseUrl}$picture";
+  String get pictureUrl => "${Constants.bypassUrl}${Constants.serebiiBaseUrl}$picture";
 
   Ingredient(this.picture, this.name, this.description, this.baseStrength,
       this.sellValue);
