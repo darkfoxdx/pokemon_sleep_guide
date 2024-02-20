@@ -3,8 +3,9 @@ import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
+import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_item.dart';
-import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
+import 'package:provider/provider.dart';
 
 class RecipeScreen extends StatefulWidget {
   final List<Ingredient> ingredients;
@@ -19,14 +20,6 @@ class RecipeScreen extends StatefulWidget {
 }
 
 class _RecipeScreenState extends State<RecipeScreen> {
-  late RecipeType recipeType;
-
-  @override
-  void initState() {
-    super.initState();
-    recipeType = PreferenceUtils.getRecipeType();
-  }
-
   List<Recipe> getList(RecipeType recipeType) {
     switch (recipeType) {
       case RecipeType.curry:
@@ -39,14 +32,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   void selectRecipeType(bool selected, RecipeType input) {
-    setState(() {
-      recipeType = selected ? input : RecipeType.curry;
-      PreferenceUtils.setRecipeType(recipeType);
-    });
+    final recipeType = selected ? input : RecipeType.curry;
+    Provider.of<UserSetting>(context, listen: false).setRecipeType(recipeType);
   }
 
   @override
   Widget build(BuildContext context) {
+    final recipeType = Provider.of<UserSetting>(context, listen: false).recipeType;
     List<Recipe> selectedRecipe = getList(recipeType);
     selectedRecipe.sort((b, a) => a
         .ingredientValue(widget.userIngredients)
@@ -59,6 +51,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             children: [
               ChoiceChip(
                 label: const Text('Curry'),
+                showCheckmark: false,
                 selected: recipeType == RecipeType.curry,
                 onSelected: (bool selected) {
                   selectRecipeType(selected, RecipeType.curry);
@@ -67,6 +60,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               const SizedBox(width: 8.0),
               ChoiceChip(
                 label: const Text('Salad'),
+                showCheckmark: false,
                 selected: recipeType == RecipeType.salad,
                 onSelected: (bool selected) {
                   selectRecipeType(selected, RecipeType.salad);
@@ -75,6 +69,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               const SizedBox(width: 8.0),
               ChoiceChip(
                 label: const Text('Dessert'),
+                showCheckmark: false,
                 selected: recipeType == RecipeType.dessert,
                 onSelected: (bool selected) {
                   selectRecipeType(selected, RecipeType.dessert);
