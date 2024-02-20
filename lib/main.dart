@@ -58,10 +58,10 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         useMaterial3: true,
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        useMaterial3: true,
-      ),
+      // darkTheme: ThemeData(
+      //   brightness: Brightness.dark,
+      //   useMaterial3: true,
+      // ),
       home: _buildRunnableApp(
         isWeb: kIsWeb &&
             defaultTargetPlatform != TargetPlatform.android &&
