@@ -3,7 +3,7 @@ import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
-import 'package:pokemon_sleep_guide/ui/ingredient_list.dart';
+import 'package:pokemon_sleep_guide/ui/recipe_item.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 
 class RecipeScreen extends StatefulWidget {
@@ -11,7 +11,8 @@ class RecipeScreen extends StatefulWidget {
   final Recipes recipes;
   final Map<String, int> userIngredients;
 
-  const RecipeScreen(this.ingredients, this.recipes, this.userIngredients, {super.key});
+  const RecipeScreen(this.ingredients, this.recipes, this.userIngredients,
+      {super.key});
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -47,7 +48,9 @@ class _RecipeScreenState extends State<RecipeScreen> {
   @override
   Widget build(BuildContext context) {
     List<Recipe> selectedRecipe = getList(recipeType);
-    selectedRecipe.sort((b, a) => a.ingredientValue(widget.userIngredients).compareTo(b.ingredientValue(widget.userIngredients)));
+    selectedRecipe.sort((b, a) => a
+        .ingredientValue(widget.userIngredients)
+        .compareTo(b.ingredientValue(widget.userIngredients)));
     return Column(
       children: [
         Padding(
@@ -85,45 +88,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
             itemCount: selectedRecipe.length,
             itemBuilder: (context, index) {
               Recipe recipe = selectedRecipe[index];
-              return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Image.asset(recipe.pictureUrl),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        flex: 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              recipe.name.toString(),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("Ingr.:"),
-                                Expanded(
-                                  child: IngredientList(
-                                    recipe.ingredients,
-                                    widget.userIngredients,
-                                    widget.ingredients,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              return RecipeItem(
+                recipe,
+                widget.ingredients,
+                widget.userIngredients,
               );
             },
           ),

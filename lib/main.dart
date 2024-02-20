@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
         webAppWidth: 480.0,
         app: ChangeNotifierProvider(
           create: (context) =>
-              UserSetting(PreferenceUtils.getUserIngredients()),
+              UserSetting(),
           child: const Home(),
         ),
       ),

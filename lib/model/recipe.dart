@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:pokemon_sleep_guide/model/recipe_ingredient.dart';
+import 'package:pokemon_sleep_guide/model/recipe_status.dart';
 
 class Recipe {
   final String picture;
@@ -11,16 +12,41 @@ class Recipe {
 
   String get pictureUrl => "images/${basename(picture)}";
 
-  int ingredientValue(Map<String, int> userIngredient) {
-    List<int> exceeded = [0];
+  double noOfCompletedIngredients(Map<String, int> userIngredient) {
+    List<double> exceeded = [0];
     for (final ingredient in ingredients) {
-      if ((userIngredient[ingredient.name] ?? 0) >= ingredient.quantity) {
+      int quantity = userIngredient[ingredient.name] ?? 0;
+      if (quantity >= ingredient.quantity) {
         exceeded.add(1);
+      } else if (quantity > 0) {
+        exceeded.add(0.5);
       }
     }
+    double sum = exceeded.reduce((a, b) => a + b);
+    return sum;
+  }
 
-    int sum = exceeded.reduce((a, b) => a + b);
-    return sum == ingredients.length ? sum + 10 : sum;
+  RecipeStatus ingredientStatus(Map<String, int> userIngredient) {
+    double sum = noOfCompletedIngredients(userIngredient);
+    if (sum == ingredients.length) {
+      return RecipeStatus.completed;
+    } else if (sum != 0) {
+      return RecipeStatus.partial;
+    }
+    return RecipeStatus.none;
+  }
+
+  double ingredientValue(Map<String, int> userIngredient) {
+    RecipeStatus status = ingredientStatus(userIngredient);
+    double sum = noOfCompletedIngredients(userIngredient);
+    switch (status) {
+      case RecipeStatus.completed:
+        return sum + 10;
+      case RecipeStatus.partial:
+        return sum + 5;
+      case RecipeStatus.none:
+        return sum;
+    }
   }
 
   Recipe.fromJson(Map<String, dynamic> json)

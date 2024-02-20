@@ -16,6 +16,7 @@ class PreferenceUtils {
 
   static const _dataUserIngredients = "user_ingredients";
   static const _dataRecipeType = "recipe_type";
+  static const _dataCompletedRecipes = "completed_recipes";
 
   static Map<String, int> getUserIngredients() {
     var mapString = _prefsInstance?.getString(_dataUserIngredients);
@@ -29,6 +30,20 @@ class PreferenceUtils {
     map[key] = quality;
     var prefs = await _instance;
     return prefs.setString(_dataUserIngredients, json.encode(map));
+  }
+
+  static Map<String, bool> getCompletedRecipes() {
+    var mapString = _prefsInstance?.getString(_dataCompletedRecipes);
+    if (mapString == null) return <String, bool>{};
+    Map<String, bool> map = Map.castFrom(json.decode(mapString));
+    return map;
+  }
+
+  static Future<bool> setCompletedRecipe(String key, bool completed) async {
+    var map = getCompletedRecipes();
+    map[key] = completed;
+    var prefs = await _instance;
+    return prefs.setString(_dataCompletedRecipes, json.encode(map));
   }
 
   static RecipeType getRecipeType() {

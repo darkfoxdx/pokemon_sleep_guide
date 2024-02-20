@@ -19,7 +19,7 @@ class IngredientList extends StatelessWidget {
         TextSpan(
           text: "  Any",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.enough,
+                color: Theme.of(context).colorScheme.completed,
               ),
         )
       ];
@@ -48,7 +48,7 @@ class IngredientList extends StatelessWidget {
         text: "$userQuantity / $quantity",
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: userQuantity >= quantity
-                  ? Theme.of(context).colorScheme.enough
+                  ? Theme.of(context).colorScheme.completed
                   : null,
             ),
       );

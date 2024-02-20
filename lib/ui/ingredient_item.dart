@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
@@ -19,6 +21,7 @@ class IngredientItem extends StatefulWidget {
 
 class _IngredientItemState extends State<IngredientItem> {
   int currentQuantity = 0;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -46,6 +49,17 @@ class _IngredientItemState extends State<IngredientItem> {
         InkWell(
           onTap: () {
             increaseCurrentQuantity();
+          },
+          onTapDown: (TapDownDetails details) {
+            _timer = Timer.periodic(const Duration(milliseconds: 100), (t) {
+              increaseCurrentQuantity();
+            });
+          },
+          onTapUp: (TapUpDetails details) {
+            _timer?.cancel();
+          },
+          onTapCancel: () {
+            _timer?.cancel();
           },
           customBorder: const CircleBorder(),
           child: Ink(
@@ -87,6 +101,17 @@ class _IngredientItemState extends State<IngredientItem> {
               customBorder: const CircleBorder(),
               onTap: () {
                 decreaseCurrentQuantity();
+              },
+              onTapDown: (TapDownDetails details) {
+                _timer = Timer.periodic(const Duration(milliseconds: 100), (t) {
+                  decreaseCurrentQuantity();
+                });
+              },
+              onTapUp: (TapUpDetails details) {
+                _timer?.cancel();
+              },
+              onTapCancel: () {
+                _timer?.cancel();
               },
               child: const Card(
                 color: Colors.white,
