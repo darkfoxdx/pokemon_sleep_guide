@@ -25,7 +25,7 @@ class IngredientList extends StatelessWidget {
       ];
     }
     for (final (i, e) in recipeIngredients.indexed) {
-      if (i == 3) {
+      if (i == 2) {
         list.add(const TextSpan(text: "\n"));
       }
       String? picture = ingredients

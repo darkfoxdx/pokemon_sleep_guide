@@ -35,7 +35,7 @@ class RecipeItem extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
             child: Row(
               children: [
                 Flexible(
@@ -97,10 +97,10 @@ class _MadeChipState extends State<MadeChip> {
     return Consumer<UserSetting>(builder: (context, userSetting, child) {
       final isCompleted =
           userSetting.completedRecipes[widget.recipe.name] == true;
-      return ActionChip(
-        backgroundColor:
-            isCompleted ? Theme.of(context).colorScheme.made : null,
-        label: const Text('Made'),
+      return IconButton(
+        isSelected: isCompleted,
+        selectedIcon: const Icon(Icons.bookmark_added),
+        icon: const Icon(Icons.bookmark_added_outlined),
         onPressed: () {
           Provider.of<UserSetting>(context, listen: false)
               .setCompletedRecipe(widget.recipe.name, !isCompleted);
