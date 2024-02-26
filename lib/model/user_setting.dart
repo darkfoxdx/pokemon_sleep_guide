@@ -1,17 +1,18 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 
 class UserSetting extends ChangeNotifier {
-  final Map<String, int> _ingredients = {};
+  final Map<String, int> _userIngredients = {};
   final Map<String, bool> _completedRecipes = {};
   final List<String> _filteredOutIngredients = [];
   RecipeType _recipeType = RecipeType.curry;
 
-  UnmodifiableMapView<String, int> get ingredients =>
-      UnmodifiableMapView(_ingredients);
+  UnmodifiableMapView<String, int> get userIngredients =>
+      UnmodifiableMapView(_userIngredients);
 
   UnmodifiableMapView<String, bool> get completedRecipes =>
       UnmodifiableMapView(_completedRecipes);
@@ -22,7 +23,7 @@ class UserSetting extends ChangeNotifier {
   RecipeType get recipeType => _recipeType;
 
   UserSetting() {
-    _ingredients.addAll(PreferenceUtils.getUserIngredients());
+    _userIngredients.addAll(PreferenceUtils.getUserIngredients());
     _completedRecipes.addAll(PreferenceUtils.getCompletedRecipes());
     _recipeType = PreferenceUtils.getRecipeType();
     _filteredOutIngredients.addAll(PreferenceUtils.getFilteredOutIngredients());
@@ -33,6 +34,13 @@ class UserSetting extends ChangeNotifier {
     _filteredOutIngredients.addAll(list);
     PreferenceUtils.setFilteredOutIngredients(list);
     notifyListeners();
+  }
+
+  void syncFilterOutIngredients(List<Ingredient> ingredients) {
+    Set<String> ingredientsStringSet = ingredients.map((e) => e.name).toSet();
+    Iterable<String> userIngredientsStringIterable = _userIngredients.keys;
+    ingredientsStringSet.removeAll(userIngredientsStringIterable);
+    setFilteredOutIngredients(ingredientsStringSet.toList());
   }
 
   void addFilteredOutIngredient(String name) {
@@ -54,13 +62,13 @@ class UserSetting extends ChangeNotifier {
   }
 
   void setIngredient(String key, int quality) {
-    _ingredients[key] = quality;
+    _userIngredients[key] = quality;
     PreferenceUtils.setIngredient(key, quality);
     notifyListeners();
   }
 
   void clearIngredients() {
-    _ingredients.clear();
+    _userIngredients.clear();
     PreferenceUtils.clearIngredients();
     notifyListeners();
   }

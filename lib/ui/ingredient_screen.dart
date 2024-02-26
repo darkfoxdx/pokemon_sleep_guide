@@ -52,7 +52,7 @@ class IngredientScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: FilledButton.icon(
             onPressed: Provider.of<UserSetting>(context, listen: true)
-                    .ingredients
+                    .userIngredients
                     .isNotEmpty
                 ? () => _showConfirmationDialog(context, onClick: () {
                       Provider.of<UserSetting>(context, listen: false)
@@ -76,7 +76,7 @@ class IngredientScreen extends StatelessWidget {
                 mainAxisSpacing: 20,
                 crossAxisCount: 4,
                 children: ingredients.map((e) {
-                  int quantity = userSetting.ingredients[e.name] ?? 0;
+                  int quantity = userSetting.userIngredients[e.name] ?? 0;
                   return IngredientItem(
                     e,
                     quantity: quantity,

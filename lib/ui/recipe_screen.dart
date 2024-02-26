@@ -59,7 +59,7 @@ class RecipeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, int> userIngredients =
-        Provider.of<UserSetting>(context).ingredients;
+        Provider.of<UserSetting>(context).userIngredients;
     final RecipeType recipeType = Provider.of<UserSetting>(context).recipeType;
     final List<String> filteredOutIngredients =
         Provider.of<UserSetting>(context).filteredOutIngredients;

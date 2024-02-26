@@ -36,9 +36,11 @@ class RecipeIngredientsFilter extends StatelessWidget {
               ),
             ),
           ),
-          FilterChip(
-            label: const Text("Filter by input"),
-            onSelected: (isSelected) {},
+          ActionChip(
+            label: const Text("Sync ingredients filter"),
+            onPressed: () {
+              userSetting.syncFilterOutIngredients(ingredients);
+            },
           )
         ],
       );
