@@ -20,25 +20,16 @@ class IngredientItem extends StatefulWidget {
 }
 
 class _IngredientItemState extends State<IngredientItem> {
-  int currentQuantity = 0;
   Timer? _timer;
 
-  @override
-  void initState() {
-    super.initState();
-    currentQuantity = widget.quantity;
-  }
-
   void increaseCurrentQuantity() {
-    currentQuantity = currentQuantity + 1;
     Provider.of<UserSetting>(context, listen: false)
-        .setIngredient(widget.ingredient.name, currentQuantity);
+        .setIngredient(widget.ingredient.name, widget.quantity + 1);
   }
 
   void decreaseCurrentQuantity() {
-    currentQuantity = currentQuantity - 1;
     Provider.of<UserSetting>(context, listen: false)
-        .setIngredient(widget.ingredient.name, currentQuantity);
+        .setIngredient(widget.ingredient.name, widget.quantity - 1);
   }
 
   @override
@@ -84,7 +75,7 @@ class _IngredientItemState extends State<IngredientItem> {
               width: 45,
               child: Center(
                 child: Text(
-                  "×$currentQuantity",
+                  "×${widget.quantity}",
                   style: const TextStyle(
                     color: Colors.black87,
                   ),
@@ -94,7 +85,7 @@ class _IngredientItemState extends State<IngredientItem> {
           ),
         ),
         Visibility(
-          visible: currentQuantity > 0,
+          visible: widget.quantity > 0,
           child: Align(
             alignment: AlignmentDirectional.topEnd,
             child: InkWell(

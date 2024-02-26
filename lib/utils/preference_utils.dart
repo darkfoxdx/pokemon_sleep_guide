@@ -32,6 +32,12 @@ class PreferenceUtils {
     return prefs.setString(_dataUserIngredients, json.encode(map));
   }
 
+  static Future<bool> clearIngredients() async {
+    var map = <String, int>{};
+    var prefs = await _instance;
+    return prefs.setString(_dataUserIngredients, json.encode(map));
+  }
+
   static Map<String, bool> getCompletedRecipes() {
     var mapString = _prefsInstance?.getString(_dataCompletedRecipes);
     if (mapString == null) return <String, bool>{};

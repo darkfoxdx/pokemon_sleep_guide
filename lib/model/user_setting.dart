@@ -35,6 +35,12 @@ class UserSetting extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearIngredients() {
+    _ingredients.clear();
+    PreferenceUtils.clearIngredients();
+    notifyListeners();
+  }
+
   void setCompletedRecipe(String key, bool completed) {
     _completedRecipes[key] = completed;
     PreferenceUtils.setCompletedRecipe(key, completed);

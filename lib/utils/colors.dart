@@ -12,4 +12,16 @@ extension ColorSchemeExtension on ColorScheme {
   Color get partial => brightness == Brightness.light
       ? const Color(0xFFB89E13)
       : const Color(0xFFB89E13);
+
+  Color get delete => brightness == Brightness.light
+      ? const Color(0xFFB22222)
+      : const Color(0xFF8B0000);
+
+  Color get deleteText => brightness == Brightness.light
+      ? const Color(0xFF8B0000)
+      : const Color(0xFFFF7F7F);
+
+  Color get white => brightness == Brightness.light
+      ? const Color(0xFFF5F5F5)
+      : const Color(0xFFF5F5F5);
 }
