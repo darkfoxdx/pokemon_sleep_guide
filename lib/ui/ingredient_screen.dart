@@ -51,12 +51,14 @@ class IngredientScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: FilledButton.icon(
-            onPressed: () {
-              _showConfirmationDialog(context, onClick: () {
-                Provider.of<UserSetting>(context, listen: false)
-                    .clearIngredients();
-              });
-            },
+            onPressed: Provider.of<UserSetting>(context, listen: true)
+                    .ingredients
+                    .isNotEmpty
+                ? () => _showConfirmationDialog(context, onClick: () {
+                      Provider.of<UserSetting>(context, listen: false)
+                          .clearIngredients();
+                    })
+                : null,
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.delete,
               foregroundColor: Theme.of(context).colorScheme.white,
