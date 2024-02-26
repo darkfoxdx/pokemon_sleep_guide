@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
-import 'package:pokemon_sleep_guide/model/user_setting.dart';
+import 'package:pokemon_sleep_guide/model/tab_notifier.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_screen.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_screen.dart';
 import 'package:pokemon_sleep_guide/utils/json_utils.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void _onItemTapped(BuildContext context, int index) {
+    Provider.of<TabNotifier>(context, listen: false).setTabIndex(index);
   }
 
   @override
@@ -36,34 +27,35 @@ class _HomeState extends State<Home> {
               List<Ingredient> ingredients = snapshot.data?.$1 ?? [];
               Recipes recipes = snapshot.data?.$2 ?? Recipes.empty();
               return Center(
-                child: IndexedStack(
-                  index: _selectedIndex,
-                  children: [
-                    IngredientScreen(ingredients),
-                    Consumer<UserSetting>(
-                      builder: (context, userSetting, child) {
-                        return RecipeScreen(ingredients, recipes, userSetting.ingredients);
-                      }
-                    ),
-                  ],
-                ),
+                child: Consumer<TabNotifier>(builder: (context, tab, child) {
+                  return IndexedStack(
+                    index: tab.selectedIndex,
+                    children: [
+                      IngredientScreen(ingredients),
+                      RecipeScreen(ingredients, recipes),
+                    ],
+                  );
+                }),
               );
             }),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.egg),
-              label: 'Ingredients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book),
-              label: 'Recipes',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
-          onTap: _onItemTapped,
-        ),
+        bottomNavigationBar:
+            Consumer<TabNotifier>(builder: (context, tab, child) {
+          return BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.egg),
+                label: 'Ingredients',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.menu_book),
+                label: 'Recipes',
+              ),
+            ],
+            currentIndex: tab.selectedIndex,
+            selectedItemColor: Colors.amber[800],
+            onTap: (index) => _onItemTapped(context, index),
+          );
+        }),
       ),
     );
   }

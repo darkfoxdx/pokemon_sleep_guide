@@ -12,6 +12,8 @@ class Recipe {
 
   String get pictureUrl => "images/${basename(picture)}";
 
+  List<String> get uniqueIngredients => ingredients.map((e) => e.name).toList();
+
   double noOfCompletedIngredients(Map<String, int> userIngredient) {
     List<double> exceeded = [0];
     for (final ingredient in ingredients) {

@@ -5,78 +5,67 @@ import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_item.dart';
+import 'package:pokemon_sleep_guide/ui/recipe_tabs.dart';
 import 'package:provider/provider.dart';
 
-class RecipeScreen extends StatefulWidget {
+class RecipeScreen extends StatelessWidget {
   final List<Ingredient> ingredients;
   final Recipes recipes;
-  final Map<String, int> userIngredients;
 
-  const RecipeScreen(this.ingredients, this.recipes, this.userIngredients,
-      {super.key});
+  const RecipeScreen(this.ingredients, this.recipes, {super.key});
 
-  @override
-  State<RecipeScreen> createState() => _RecipeScreenState();
-}
-
-class _RecipeScreenState extends State<RecipeScreen> {
   List<Recipe> getList(RecipeType recipeType) {
     switch (recipeType) {
       case RecipeType.curry:
-        return widget.recipes.curryDishes;
+        return recipes.curryDishes;
       case RecipeType.salad:
-        return widget.recipes.saladDishes;
+        return recipes.saladDishes;
       case RecipeType.dessert:
-        return widget.recipes.dessertDishes;
+        return recipes.dessertDishes;
     }
   }
 
-  void selectRecipeType(bool selected, RecipeType input) {
-    final recipeType = selected ? input : RecipeType.curry;
-    Provider.of<UserSetting>(context, listen: false).setRecipeType(recipeType);
+  List<Recipe> _generateCurrentList(BuildContext context, RecipeType recipeType,
+      Map<String, int> userIngredients) {
+    List<Recipe> selectedRecipe = getList(recipeType);
+    selectedRecipe.sort((b, a) => a
+        .ingredientValue(userIngredients)
+        .compareTo(b.ingredientValue(userIngredients)));
+    return selectedRecipe;
+  }
+
+  Map<String, int> _generateIngredientRecipeCount(
+      BuildContext context, List<Recipe> selectedRecipe) {
+    Map<String, int> ingredientRecipeCount = selectedRecipe.fold(
+      <String, int>{},
+      (previousValue, recipe) {
+        List<String> ingredients = recipe.uniqueIngredients;
+        for (var ingredient in ingredients) {
+          int previousCount = previousValue[ingredient] ?? 0;
+          previousValue[ingredient] = previousCount + 1;
+        }
+        return previousValue;
+      },
+    );
+    return ingredientRecipeCount;
   }
 
   @override
   Widget build(BuildContext context) {
-    final recipeType = Provider.of<UserSetting>(context, listen: false).recipeType;
-    List<Recipe> selectedRecipe = getList(recipeType);
-    selectedRecipe.sort((b, a) => a
-        .ingredientValue(widget.userIngredients)
-        .compareTo(b.ingredientValue(widget.userIngredients)));
+    final Map<String, int> userIngredients =
+        Provider.of<UserSetting>(context).ingredients;
+    final recipeType = Provider.of<UserSetting>(context).recipeType;
+
+    List<Recipe> selectedRecipe =
+        _generateCurrentList(context, recipeType, userIngredients);
+    Map<String, int> ingredientRecipeCount =
+        _generateIngredientRecipeCount(context, selectedRecipe);
+
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-          child: Row(
-            children: [
-              ChoiceChip(
-                label: const Text('Curry'),
-                showCheckmark: false,
-                selected: recipeType == RecipeType.curry,
-                onSelected: (bool selected) {
-                  selectRecipeType(selected, RecipeType.curry);
-                },
-              ),
-              const SizedBox(width: 8.0),
-              ChoiceChip(
-                label: const Text('Salad'),
-                showCheckmark: false,
-                selected: recipeType == RecipeType.salad,
-                onSelected: (bool selected) {
-                  selectRecipeType(selected, RecipeType.salad);
-                },
-              ),
-              const SizedBox(width: 8.0),
-              ChoiceChip(
-                label: const Text('Dessert'),
-                showCheckmark: false,
-                selected: recipeType == RecipeType.dessert,
-                onSelected: (bool selected) {
-                  selectRecipeType(selected, RecipeType.dessert);
-                },
-              ),
-            ],
-          ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+          child: RecipeTabs(),
         ),
         Expanded(
           child: ListView.builder(
@@ -85,8 +74,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
               Recipe recipe = selectedRecipe[index];
               return RecipeItem(
                 recipe,
-                widget.ingredients,
-                widget.userIngredients,
+                ingredients,
+                userIngredients,
               );
             },
           ),

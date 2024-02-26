@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_guide/model/tab_notifier.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/home.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
@@ -20,7 +21,6 @@ Widget _buildRunnableApp({
   required double webAppWidth,
   required Widget app,
 }) {
-  ;
   if (!isWeb) {
     return app;
   }
@@ -67,9 +67,11 @@ class MyApp extends StatelessWidget {
             defaultTargetPlatform != TargetPlatform.android &&
             defaultTargetPlatform != TargetPlatform.iOS,
         webAppWidth: 480.0,
-        app: ChangeNotifierProvider(
-          create: (context) =>
-              UserSetting(),
+        app: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<UserSetting>(create: (context) => UserSetting()),
+            ChangeNotifierProvider<TabNotifier>(create: (context) => TabNotifier()),
+          ],
           child: const Home(),
         ),
       ),
