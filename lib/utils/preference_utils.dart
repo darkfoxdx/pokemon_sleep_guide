@@ -17,6 +17,33 @@ class PreferenceUtils {
   static const _dataUserIngredients = "user_ingredients";
   static const _dataRecipeType = "recipe_type";
   static const _dataCompletedRecipes = "completed_recipes";
+  static const _dataFilteredOutIngredients = "filtered_out_ingredients";
+
+  static List<String> getFilteredOutIngredients() {
+    var listString = _prefsInstance?.getString(_dataFilteredOutIngredients);
+    if (listString == null) return <String>[];
+    List<String> list = List.castFrom(json.decode(listString));
+    return list;
+  }
+
+  static Future<bool> setFilteredOutIngredients(List<String> list) async {
+    var prefs = await _instance;
+    return prefs.setString(_dataFilteredOutIngredients, json.encode(list));
+  }
+
+  static Future<bool> addFilteredOutIngredient(String value) async {
+    var list = getFilteredOutIngredients();
+    list.add(value);
+    var prefs = await _instance;
+    return prefs.setString(_dataFilteredOutIngredients, json.encode(list));
+  }
+
+  static Future<bool> removeFilteredOutIngredient(String value) async {
+    var list = getFilteredOutIngredients();
+    list.remove(value);
+    var prefs = await _instance;
+    return prefs.setString(_dataFilteredOutIngredients, json.encode(list));
+  }
 
   static Map<String, int> getUserIngredients() {
     var mapString = _prefsInstance?.getString(_dataUserIngredients);

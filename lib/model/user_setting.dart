@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 class UserSetting extends ChangeNotifier {
   final Map<String, int> _ingredients = {};
   final Map<String, bool> _completedRecipes = {};
+  final List<String> _filteredOutIngredients = [];
   RecipeType _recipeType = RecipeType.curry;
 
   UnmodifiableMapView<String, int> get ingredients =>
@@ -15,12 +16,35 @@ class UserSetting extends ChangeNotifier {
   UnmodifiableMapView<String, bool> get completedRecipes =>
       UnmodifiableMapView(_completedRecipes);
 
+  UnmodifiableListView<String> get filteredOutIngredients =>
+      UnmodifiableListView(_filteredOutIngredients);
+
   RecipeType get recipeType => _recipeType;
 
   UserSetting() {
     _ingredients.addAll(PreferenceUtils.getUserIngredients());
     _completedRecipes.addAll(PreferenceUtils.getCompletedRecipes());
     _recipeType = PreferenceUtils.getRecipeType();
+    _filteredOutIngredients.addAll(PreferenceUtils.getFilteredOutIngredients());
+  }
+
+  void setFilteredOutIngredients(List<String> list) {
+    _filteredOutIngredients.clear();
+    _filteredOutIngredients.addAll(list);
+    PreferenceUtils.setFilteredOutIngredients(list);
+    notifyListeners();
+  }
+
+  void addFilteredOutIngredient(String name) {
+    _filteredOutIngredients.add(name);
+    PreferenceUtils.addFilteredOutIngredient(name);
+    notifyListeners();
+  }
+
+  void removeFilteredOutIngredient(String name) {
+    _filteredOutIngredients.remove(name);
+    PreferenceUtils.removeFilteredOutIngredient(name);
+    notifyListeners();
   }
 
   void setRecipeType(RecipeType recipeType) {
