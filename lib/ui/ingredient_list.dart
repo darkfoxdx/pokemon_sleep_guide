@@ -12,59 +12,55 @@ class IngredientList extends StatelessWidget {
       this.recipeIngredients, this.userIngredients, this.ingredients,
       {super.key});
 
-  List<InlineSpan> _buildSpan(BuildContext context) {
-    List<InlineSpan> list = [];
+  List<Widget> _buildItems(BuildContext context) {
+    List<Widget> list = [];
     if (recipeIngredients.isEmpty) {
       return [
-        TextSpan(
-          text: "  Any",
+        Text(
+          "  Any",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.completed,
               ),
         )
       ];
     }
-    for (final (i, e) in recipeIngredients.indexed) {
-      if (i == 2) {
-        list.add(const TextSpan(text: "\n"));
-      }
+    for (final e in recipeIngredients) {
       String? picture = ingredients
           .firstWhere((element) => element.name == e.name,
               orElse: Ingredient.empty)
           .pictureUrl;
       int userQuantity = userIngredients[e.name] ?? 0;
       int quantity = e.quantity;
-      var imageSpan = WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 4.0),
-          child: Image.asset(
-            picture,
-            width: 24,
-          ),
-        ),
-      );
-      var textSpan = TextSpan(
-        text: "$userQuantity / $quantity",
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: userQuantity >= quantity
-                  ? Theme.of(context).colorScheme.completed
-                  : null,
+      Widget widget = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 4.0),
+            child: Image.asset(
+              picture,
+              width: 24,
             ),
+          ),
+          Text(
+            "$userQuantity / $quantity",
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: userQuantity >= quantity
+                      ? Theme.of(context).colorScheme.completed
+                      : null,
+                ),
+          ),
+        ],
       );
-      list.addAll([imageSpan, textSpan]);
+      list.add(widget);
     }
     return list;
   }
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      maxLines: 10,
-      softWrap: true,
-      text: TextSpan(
-        children: _buildSpan(context),
-      ),
+    return Wrap(
+      direction: Axis.horizontal,
+      children: _buildItems(context),
     );
   }
 }

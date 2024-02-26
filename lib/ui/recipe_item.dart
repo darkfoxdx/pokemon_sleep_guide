@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
@@ -45,26 +46,29 @@ class RecipeItem extends StatelessWidget {
                 const SizedBox(width: 12),
                 Flexible(
                   flex: 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        recipe.name.toString(),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Ingr.:"),
-                          Expanded(
-                            child: IngredientList(
-                              recipe.ingredients,
-                              userIngredients,
-                              ingredients,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 48),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          recipe.name.toString(),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Ingr.:"),
+                            Expanded(
+                              child: IngredientList(
+                                recipe.ingredients,
+                                userIngredients,
+                                ingredients,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -98,6 +102,7 @@ class _MadeChipState extends State<MadeChip> {
       final isCompleted =
           userSetting.completedRecipes[widget.recipe.name] == true;
       return IconButton(
+        color: Theme.of(context).colorScheme.made,
         isSelected: isCompleted,
         selectedIcon: const Icon(Icons.bookmark_added),
         icon: const Icon(Icons.bookmark_added_outlined),
