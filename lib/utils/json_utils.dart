@@ -5,7 +5,7 @@ import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
 
-Future<Recipes?> fetchRecipes(BuildContext context) async {
+Future<Recipes> fetchRecipes(BuildContext context) async {
   String data = await DefaultAssetBundle.of(context).loadString(
       "jsons/recipes.json");
   final Map jsonResult = jsonDecode(data);

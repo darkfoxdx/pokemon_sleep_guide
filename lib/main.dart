@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_guide/model/data_notifier.dart';
 import 'package:pokemon_sleep_guide/model/tab_notifier.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/home.dart';
@@ -69,8 +70,15 @@ class MyApp extends StatelessWidget {
         webAppWidth: 480.0,
         app: MultiProvider(
           providers: [
-            ChangeNotifierProvider<UserSetting>(create: (context) => UserSetting()),
-            ChangeNotifierProvider<TabNotifier>(create: (context) => TabNotifier()),
+            ChangeNotifierProvider<UserSetting>(
+                create: (context) => UserSetting()),
+            ChangeNotifierProvider<TabNotifier>(
+                create: (context) => TabNotifier()),
+            ChangeNotifierProvider<DataNotifier>(create: (context) {
+              final dataNotifier = DataNotifier();
+              dataNotifier.init(context);
+              return dataNotifier;
+            }),
           ],
           child: const Home(),
         ),
