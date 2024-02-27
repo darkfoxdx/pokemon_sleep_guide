@@ -27,13 +27,16 @@ class RecipeScreen extends StatelessWidget {
   }
 
   List<Recipe> _generateCurrentList(BuildContext context, RecipeType recipeType,
-      Map<String, int> userIngredients, List<String> filteredOutIngredients) {
-    List<Recipe> selectedRecipe = getList(recipeType)
-        .where((element) =>
-            element.ingredients.isEmpty ||
-            element.ingredients.every(
-                (element) => !filteredOutIngredients.contains(element.name)))
-        .toList();
+      Map<String, int> userIngredients, List<String> filteredIngredients) {
+    List<Recipe> selectedRecipe = getList(recipeType);
+    if (filteredIngredients.isNotEmpty) {
+      selectedRecipe = selectedRecipe
+          .where((element) =>
+              element.ingredients.isEmpty ||
+              element.ingredients.every(
+                  (element) => filteredIngredients.contains(element.name)))
+          .toList();
+    }
     selectedRecipe.sort((b, a) => a
         .ingredientValue(userIngredients)
         .compareTo(b.ingredientValue(userIngredients)));
@@ -62,7 +65,7 @@ class RecipeScreen extends StatelessWidget {
         Provider.of<UserSetting>(context).userIngredients;
     final RecipeType recipeType = Provider.of<UserSetting>(context).recipeType;
     final List<String> filteredOutIngredients =
-        Provider.of<UserSetting>(context).filteredOutIngredients;
+        Provider.of<UserSetting>(context).filteredIngredients;
 
     List<Recipe> selectedRecipe = _generateCurrentList(
         context, recipeType, userIngredients, filteredOutIngredients);

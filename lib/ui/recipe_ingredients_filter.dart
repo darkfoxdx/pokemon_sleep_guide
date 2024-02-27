@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +23,12 @@ class RecipeIngredientsFilter extends StatelessWidget {
               labelPadding: EdgeInsets.zero,
               shape: const CircleBorder(),
               showCheckmark: false,
-              selected:
-                  !userSetting.filteredOutIngredients.contains(element.name),
+              selected: userSetting.filteredIngredients.contains(element.name),
               onSelected: (isSelected) {
                 if (isSelected) {
-                  userSetting.removeFilteredOutIngredient(element.name);
+                  userSetting.addFilteredIngredient(element.name);
                 } else {
-                  userSetting.addFilteredOutIngredient(element.name);
+                  userSetting.removeFilteredIngredient(element.name);
                 }
               },
               label: Image.asset(
@@ -37,9 +38,19 @@ class RecipeIngredientsFilter extends StatelessWidget {
             ),
           ),
           ActionChip(
-            label: const Text("Sync ingredients filter"),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            label: const Text("Sync Ingr."),
             onPressed: () {
-              userSetting.syncFilterOutIngredients(ingredients);
+              userSetting.syncFilterIngredients();
+            },
+          ),
+          ActionChip(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            label: const Text("Clear Ingr."),
+            onPressed: () {
+              userSetting.clearFilterIngredients();
             },
           )
         ],
