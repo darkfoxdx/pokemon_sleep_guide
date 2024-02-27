@@ -101,6 +101,9 @@ class UserSetting extends ChangeNotifier {
     notifyListeners();
   }
 
+  int get recipeListLength => getList().length;
+  int get currentListLength => generateCurrentList().length;
+
   List<Recipe> getList() {
     switch (recipeType) {
       case RecipeType.curry:
@@ -117,8 +120,8 @@ class UserSetting extends ChangeNotifier {
     if (filteredIngredients.isNotEmpty) {
       selectedRecipe = selectedRecipe
           .where((element) =>
-      element.ingredients.isEmpty ||
-          element.ingredients.every(
+              element.ingredients.isEmpty ||
+              element.ingredients.every(
                   (element) => filteredIngredients.contains(element.name)))
           .toList();
     }
@@ -126,5 +129,21 @@ class UserSetting extends ChangeNotifier {
         .ingredientValue(userIngredients)
         .compareTo(b.ingredientValue(userIngredients)));
     return selectedRecipe;
+  }
+
+  Map<String, int> generateIngredientRecipeCount(
+      BuildContext context, List<Recipe> selectedRecipe) {
+    Map<String, int> ingredientRecipeCount = selectedRecipe.fold(
+      <String, int>{},
+      (previousValue, recipe) {
+        List<String> ingredients = recipe.uniqueIngredients;
+        for (var ingredient in ingredients) {
+          int previousCount = previousValue[ingredient] ?? 0;
+          previousValue[ingredient] = previousCount + 1;
+        }
+        return previousValue;
+      },
+    );
+    return ingredientRecipeCount;
   }
 }
