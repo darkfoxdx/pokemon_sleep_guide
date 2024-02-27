@@ -70,15 +70,17 @@ class MyApp extends StatelessWidget {
         webAppWidth: 480.0,
         app: MultiProvider(
           providers: [
-            ChangeNotifierProvider<UserSetting>(
-                create: (context) => UserSetting()),
-            ChangeNotifierProvider<TabNotifier>(
-                create: (context) => TabNotifier()),
+            ChangeNotifierProvider<TabNotifier>(create: (_) => TabNotifier()),
             ChangeNotifierProvider<DataNotifier>(create: (context) {
               final dataNotifier = DataNotifier();
               dataNotifier.init(context);
               return dataNotifier;
             }),
+            ChangeNotifierProxyProvider<DataNotifier, UserSetting>(
+              create: (_) => UserSetting(),
+              update: (_, dataNotifier, userSetting) =>
+                  userSetting!..update(dataNotifier.data),
+            ),
           ],
           child: const Home(),
         ),

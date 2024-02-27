@@ -1,10 +1,22 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_guide/model/data.dart';
+import 'package:pokemon_sleep_guide/model/ingredient.dart';
+import 'package:pokemon_sleep_guide/model/recipe.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
+import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 
 class UserSetting extends ChangeNotifier {
+  List<Ingredient> _ingredients = [];
+  Recipes _recipes = Recipes.empty();
+
+  UnmodifiableListView<Ingredient> get ingredients =>
+      UnmodifiableListView(_ingredients);
+
+  Recipes get recipes => _recipes;
+
   final Map<String, int> _userIngredients = {};
   final Map<String, bool> _completedRecipes = {};
   final List<String> _filteredIngredients = [];
@@ -26,6 +38,13 @@ class UserSetting extends ChangeNotifier {
     _completedRecipes.addAll(PreferenceUtils.getCompletedRecipes());
     _recipeType = PreferenceUtils.getRecipeType();
     _filteredIngredients.addAll(PreferenceUtils.getFilteredIngredients());
+  }
+
+  void update(Data data) {
+    _ingredients.clear();
+    _ingredients.addAll(data.ingredients);
+    _recipes = data.recipes;
+    notifyListeners();
   }
 
   void setFilteredOutIngredients(List<String> list) {
@@ -80,5 +99,32 @@ class UserSetting extends ChangeNotifier {
     _completedRecipes[key] = completed;
     PreferenceUtils.setCompletedRecipe(key, completed);
     notifyListeners();
+  }
+
+  List<Recipe> getList() {
+    switch (recipeType) {
+      case RecipeType.curry:
+        return recipes.curryDishes;
+      case RecipeType.salad:
+        return recipes.saladDishes;
+      case RecipeType.dessert:
+        return recipes.dessertDishes;
+    }
+  }
+
+  List<Recipe> generateCurrentList() {
+    List<Recipe> selectedRecipe = getList();
+    if (filteredIngredients.isNotEmpty) {
+      selectedRecipe = selectedRecipe
+          .where((element) =>
+      element.ingredients.isEmpty ||
+          element.ingredients.every(
+                  (element) => filteredIngredients.contains(element.name)))
+          .toList();
+    }
+    selectedRecipe.sort((b, a) => a
+        .ingredientValue(userIngredients)
+        .compareTo(b.ingredientValue(userIngredients)));
+    return selectedRecipe;
   }
 }

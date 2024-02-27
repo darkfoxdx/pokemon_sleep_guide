@@ -1,14 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:provider/provider.dart';
 
 class RecipeIngredientsFilter extends StatelessWidget {
-  final List<Ingredient> ingredients;
 
-  const RecipeIngredientsFilter(this.ingredients, {super.key});
+  const RecipeIngredientsFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +14,7 @@ class RecipeIngredientsFilter extends StatelessWidget {
         spacing: 8.0,
         runSpacing: 8.0,
         children: [
-          ...ingredients.map(
+          ...userSetting.ingredients.map(
             (element) => FilterChip(
               labelPadding: EdgeInsets.zero,
               shape: const CircleBorder(),

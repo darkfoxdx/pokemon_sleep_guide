@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_item.dart';
 import 'package:pokemon_sleep_guide/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class IngredientScreen extends StatelessWidget {
-  final List<Ingredient> ingredients;
-
-  const IngredientScreen(this.ingredients, {super.key});
+  const IngredientScreen({super.key});
 
   Future<void> _showConfirmationDialog(BuildContext context,
       {Function()? onClick}) async {
@@ -50,22 +47,24 @@ class IngredientScreen extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: FilledButton.icon(
-            onPressed: Provider.of<UserSetting>(context, listen: true)
-                    .userIngredients
-                    .isNotEmpty
-                ? () => _showConfirmationDialog(context, onClick: () {
-                      Provider.of<UserSetting>(context, listen: false)
-                          .clearIngredients();
-                    })
-                : null,
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.delete,
-              foregroundColor: Theme.of(context).colorScheme.white,
-            ),
-            icon: const Icon(Icons.clear),
-            label: const Text("Clear All"),
-          ),
+          child: Consumer<UserSetting>(builder: (context, userSetting, child) {
+            return FilledButton.icon(
+              onPressed: userSetting.userIngredients.isNotEmpty
+                  ? () => _showConfirmationDialog(
+                        context,
+                        onClick: () {
+                          userSetting.clearIngredients();
+                        },
+                      )
+                  : null,
+              style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.delete,
+                foregroundColor: Theme.of(context).colorScheme.white,
+              ),
+              icon: const Icon(Icons.clear),
+              label: const Text("Clear All"),
+            );
+          }),
         ),
         Expanded(
           child: Consumer<UserSetting>(
@@ -75,7 +74,7 @@ class IngredientScreen extends StatelessWidget {
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
                 crossAxisCount: 4,
-                children: ingredients.map((e) {
+                children: userSetting.ingredients.map((e) {
                   int quantity = userSetting.userIngredients[e.name] ?? 0;
                   return IngredientItem(
                     e,

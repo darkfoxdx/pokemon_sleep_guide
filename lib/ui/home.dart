@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_sleep_guide/model/data_notifier.dart';
-import 'package:pokemon_sleep_guide/model/ingredient.dart';
-import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/model/tab_notifier.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_screen.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_screen.dart';
@@ -21,21 +18,17 @@ class Home extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Pokemon Sleep'),
         ),
-        body: Consumer<DataNotifier>(builder: (context, data, child) {
-          List<Ingredient> ingredients = data.ingredients;
-          Recipes recipes = data.recipes;
-          return Center(
-            child: Consumer<TabNotifier>(builder: (context, tab, child) {
-              return IndexedStack(
-                index: tab.selectedIndex,
-                children: [
-                  IngredientScreen(ingredients),
-                  RecipeScreen(ingredients, recipes),
-                ],
-              );
-            }),
-          );
-        }),
+        body: Center(
+          child: Consumer<TabNotifier>(builder: (context, tab, child) {
+            return IndexedStack(
+              index: tab.selectedIndex,
+              children: const [
+                IngredientScreen(),
+                RecipeScreen(),
+              ],
+            );
+          }),
+        ),
         bottomNavigationBar:
             Consumer<TabNotifier>(builder: (context, tab, child) {
           return BottomNavigationBar(
