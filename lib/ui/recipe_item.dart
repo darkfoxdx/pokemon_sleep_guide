@@ -53,12 +53,12 @@ class RecipeItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          recipe.name.toString(),
+                          '${recipe.name} (${recipe.totalIngredients})',
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Ingr.:"),
+                            const Text('Ingr.:'),
                             Expanded(
                               child: IngredientList(
                                 recipe.ingredients,

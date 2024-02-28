@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
+import 'package:pokemon_sleep_guide/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class IngredientItem extends StatefulWidget {
@@ -69,15 +70,17 @@ class _IngredientItemState extends State<IngredientItem> {
         Align(
           alignment: AlignmentDirectional.bottomEnd,
           child: Card(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.white,
             child: SizedBox(
               height: 20,
               width: 45,
               child: Center(
                 child: Text(
                   "×${widget.quantity}",
-                  style: const TextStyle(
-                    color: Colors.black87,
+                  style: TextStyle(
+                    color: widget.quantity == 0
+                        ? Theme.of(context).colorScheme.redPrimary
+                        : Colors.grey[900],
                   ),
                 ),
               ),
@@ -104,10 +107,10 @@ class _IngredientItemState extends State<IngredientItem> {
               onTapCancel: () {
                 _timer?.cancel();
               },
-              child: const Card(
-                color: Colors.white,
-                shape: CircleBorder(),
-                child: SizedBox(
+              child: Card(
+                color: Theme.of(context).colorScheme.white,
+                shape: const CircleBorder(),
+                child: const SizedBox(
                   height: 20,
                   width: 20,
                   child: Center(

@@ -25,7 +25,7 @@ class IngredientScreen extends StatelessWidget {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.deleteText,
+                foregroundColor: Theme.of(context).colorScheme.redSecondary,
               ),
               onPressed: () {
                 onClick?.call();
@@ -58,7 +58,7 @@ class IngredientScreen extends StatelessWidget {
                       )
                   : null,
               style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.delete,
+                backgroundColor: Theme.of(context).colorScheme.redPrimary,
                 foregroundColor: Theme.of(context).colorScheme.white,
               ),
               icon: const Icon(Icons.clear),

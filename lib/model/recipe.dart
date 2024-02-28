@@ -14,6 +14,9 @@ class Recipe {
 
   List<String> get uniqueIngredients => ingredients.map((e) => e.name).toList();
 
+  int get totalIngredients => ingredients.fold(
+      0, (previousValue, element) => previousValue + element.quantity);
+
   double noOfCompletedIngredients(Map<String, int> userIngredient) {
     List<double> exceeded = [0];
     for (final ingredient in ingredients) {
