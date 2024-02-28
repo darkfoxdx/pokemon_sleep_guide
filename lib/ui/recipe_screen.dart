@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:pokemon_sleep_guide/model/filter_notifier.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
 import 'package:pokemon_sleep_guide/model/user_setting.dart';
+import 'package:pokemon_sleep_guide/ui/bookmark_filter.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_ingredients_filter.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_item.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_tabs.dart';
@@ -22,9 +23,18 @@ class RecipeScreen extends StatelessWidget {
         ),
         Visibility(
           visible: Provider.of<FilterNotifier>(context).showFilter,
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: RecipeIngredientsFilter(),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: RecipeIngredientsFilter(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: BookmarkFilter(),
+              ),
+            ],
           ),
         ),
         Padding(

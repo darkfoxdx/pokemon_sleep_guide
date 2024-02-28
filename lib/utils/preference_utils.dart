@@ -1,5 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:convert';
+import 'package:pokemon_sleep_guide/model/bookmark_state.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,7 @@ class PreferenceUtils {
   static const _dataRecipeType = "recipe_type";
   static const _dataCompletedRecipes = "completed_recipes";
   static const _dataFilteredIngredients = "filtered_out_ingredients";
+  static const _dataBookmarkState = "bookmark_state";
 
   static List<String> getFilteredIngredients() {
     var listString = _prefsInstance?.getString(_dataFilteredIngredients);
@@ -111,5 +113,15 @@ class PreferenceUtils {
   static Future<bool> setRecipeType(RecipeType type) async {
     var prefs = await _instance;
     return prefs.setInt(_dataRecipeType, type.index);
+  }
+
+  static BookmarkState getBookmarkState() {
+    int bookmarkState = _prefsInstance?.getInt(_dataBookmarkState) ?? 0;
+    return BookmarkState.values[bookmarkState];
+  }
+
+  static Future<bool> setBookmarkState(BookmarkState state) async {
+    var prefs = await _instance;
+    return prefs.setInt(_dataBookmarkState, state.index);
   }
 }

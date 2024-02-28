@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_guide/model/bookmark_state.dart';
 import 'package:pokemon_sleep_guide/model/data.dart';
 import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
@@ -38,6 +39,7 @@ class UserSetting extends ChangeNotifier {
   final List<String> _completedRecipes = [];
   final List<String> _filteredIngredients = [];
   RecipeType _recipeType = RecipeType.curry;
+  BookmarkState _bookmarkState = BookmarkState.all;
 
   UnmodifiableMapView<String, int> get userIngredients =>
       UnmodifiableMapView(_userIngredients);
@@ -50,8 +52,11 @@ class UserSetting extends ChangeNotifier {
 
   RecipeType get recipeType => _recipeType;
 
+  BookmarkState get bookmarkState => _bookmarkState;
+
   UserSetting(String? data) {
     _recipeType = PreferenceUtils.getRecipeType();
+    _bookmarkState = PreferenceUtils.getBookmarkState();
     _filteredIngredients.addAll(PreferenceUtils.getFilteredIngredients());
 
     if (data != null) {
@@ -147,17 +152,28 @@ class UserSetting extends ChangeNotifier {
 
   List<Recipe> generateCurrentList() {
     List<Recipe> selectedRecipe = getList();
-    if (filteredIngredients.isNotEmpty) {
+    if (_filteredIngredients.isNotEmpty) {
       selectedRecipe = selectedRecipe
           .where((element) =>
               element.ingredients.isEmpty ||
               element.ingredients.every(
-                  (element) => filteredIngredients.contains(element.name)))
+                  (element) => _filteredIngredients.contains(element.name)))
           .toList();
     }
+    if (_bookmarkState != BookmarkState.all) {
+      selectedRecipe = selectedRecipe.where((element) {
+        bool isCompleted = _completedRecipes.contains(element.name);
+        if (_bookmarkState == BookmarkState.yes) {
+          return isCompleted;
+        } else {
+          return !isCompleted;
+        }
+      }).toList();
+    }
+
     selectedRecipe.sort((b, a) => a
-        .ingredientValue(userIngredients)
-        .compareTo(b.ingredientValue(userIngredients)));
+        .ingredientValue(_userIngredients)
+        .compareTo(b.ingredientValue(_userIngredients)));
     return selectedRecipe;
   }
 
@@ -175,5 +191,13 @@ class UserSetting extends ChangeNotifier {
       },
     );
     return ingredientRecipeCount;
+  }
+
+  void toggleBookmarkState() {
+    List<BookmarkState> states = BookmarkState.values;
+    int newIndex = (_bookmarkState.index + 1) % states.length;
+    _bookmarkState = states[newIndex];
+    PreferenceUtils.setBookmarkState(states[newIndex]);
+    notifyListeners();
   }
 }
