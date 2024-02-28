@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_guide/model/user_setting.dart';
 import 'package:pokemon_sleep_guide/ui/home.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/html.dart' as html;
 
 void main() async {
   // Required for async calls in `main`
@@ -14,8 +15,12 @@ void main() async {
 
   // Initialize SharedPrefs instance.
   await PreferenceUtils.init();
+  var data = Uri.base.queryParameters["data"];
+  var decode = data != null ? Uri.decodeComponent(data) : null;
 
-  runApp(const MyApp());
+  html.window.history.pushState({}, '', Uri.base.path);
+
+  runApp(MyApp(decode));
 }
 
 Widget _buildRunnableApp({
@@ -49,13 +54,16 @@ Widget _buildRunnableApp({
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? data;
+
+  const MyApp(this.data, {super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pokemon Sleep Guide',
+      themeMode: ThemeMode.system,
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: true,
@@ -80,7 +88,7 @@ class MyApp extends StatelessWidget {
               return dataNotifier;
             }),
             ChangeNotifierProxyProvider<DataNotifier, UserSetting>(
-              create: (_) => UserSetting(),
+              create: (_) => UserSetting(data),
               update: (_, dataNotifier, userSetting) =>
                   userSetting!..update(dataNotifier.data),
             ),

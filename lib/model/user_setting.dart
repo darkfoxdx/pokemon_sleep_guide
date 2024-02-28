@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/data.dart';
@@ -9,13 +10,29 @@ import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 
 class UserSetting extends ChangeNotifier {
-  List<Ingredient> _ingredients = [];
+  final List<Ingredient> _ingredients = [];
   Recipes _recipes = Recipes.empty();
 
   UnmodifiableListView<Ingredient> get ingredients =>
       UnmodifiableListView(_ingredients);
 
   Recipes get recipes => _recipes;
+
+  Map<String, dynamic> get exportData => {
+        "userIngredients": _userIngredients,
+        "completedRecipes": _completedRecipes,
+      };
+
+  void readExportedData(Map<String, dynamic> exportedData) {
+    var userIngredients = exportData["userIngredients"];
+    _userIngredients.clear();
+    _userIngredients.addAll(userIngredients);
+
+    var completedRecipes = exportData["completedRecipes"];
+    _recipes = completedRecipes;
+
+    notifyListeners();
+  }
 
   final Map<String, int> _userIngredients = {};
   final Map<String, bool> _completedRecipes = {};
@@ -33,11 +50,18 @@ class UserSetting extends ChangeNotifier {
 
   RecipeType get recipeType => _recipeType;
 
-  UserSetting() {
-    _userIngredients.addAll(PreferenceUtils.getUserIngredients());
-    _completedRecipes.addAll(PreferenceUtils.getCompletedRecipes());
+  UserSetting(String? data) {
     _recipeType = PreferenceUtils.getRecipeType();
     _filteredIngredients.addAll(PreferenceUtils.getFilteredIngredients());
+
+    if (data != null) {
+      var json = jsonDecode(data);
+      _userIngredients.addAll(Map.castFrom(json["userIngredients"]));
+      _completedRecipes.addAll(Map.castFrom(json["completedRecipes"]));
+    } else {
+      _userIngredients.addAll(PreferenceUtils.getUserIngredients());
+      _completedRecipes.addAll(PreferenceUtils.getCompletedRecipes());
+    }
   }
 
   void update(Data data) {
@@ -102,6 +126,7 @@ class UserSetting extends ChangeNotifier {
   }
 
   int get recipeListLength => getList().length;
+
   int get currentListLength => generateCurrentList().length;
 
   List<Recipe> getList() {
