@@ -68,15 +68,19 @@ class PreferenceUtils {
   static List<String> getCompletedRecipes() {
     var listString = _prefsInstance?.getString(_dataCompletedRecipes);
     if (listString == null) return <String>[];
+    var decode = json.decode(listString);
     List<String> list = [];
-    try {
-      list = List.castFrom(json.decode(listString));
-    } on TypeError catch (_) {
+    if (decode is List) {
+      list = List.castFrom(decode);
+    } else if (decode is Map) {
       // Convert from old data
-      Map<String, int> map = Map.castFrom(json.decode(listString));
-      list = map.keys.toList();
-      setCompletedRecipes(list);
+      Map<String, bool> map = Map.castFrom(decode);
+      list = map.entries
+          .where((element) => element.value)
+          .map((e) => e.key)
+          .toList();
     }
+
     return list;
   }
 

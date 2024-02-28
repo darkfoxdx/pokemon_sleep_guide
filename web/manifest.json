@@ -1,6 +1,6 @@
 {
-    "name": "pokemon_sleep_guide",
-    "short_name": "pokemon_sleep_guide",
+    "name": "Pokemon Sleep Guide",
+    "short_name": "Pokemon Sleep Guide",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
