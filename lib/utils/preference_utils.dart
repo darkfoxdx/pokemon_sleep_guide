@@ -65,18 +65,38 @@ class PreferenceUtils {
     return prefs.setString(_dataUserIngredients, json.encode(map));
   }
 
-  static Map<String, bool> getCompletedRecipes() {
-    var mapString = _prefsInstance?.getString(_dataCompletedRecipes);
-    if (mapString == null) return <String, bool>{};
-    Map<String, bool> map = Map.castFrom(json.decode(mapString));
-    return map;
+  static List<String> getCompletedRecipes() {
+    var listString = _prefsInstance?.getString(_dataCompletedRecipes);
+    if (listString == null) return <String>[];
+    List<String> list = [];
+    try {
+      list = List.castFrom(json.decode(listString));
+    } on TypeError catch (_) {
+      // Convert from old data
+      Map<String, int> map = Map.castFrom(json.decode(listString));
+      list = map.keys.toList();
+      setCompletedRecipes(list);
+    }
+    return list;
   }
 
-  static Future<bool> setCompletedRecipe(String key, bool completed) async {
-    var map = getCompletedRecipes();
-    map[key] = completed;
+  static Future<bool> setCompletedRecipes(List<String> list) async {
     var prefs = await _instance;
-    return prefs.setString(_dataCompletedRecipes, json.encode(map));
+    return prefs.setString(_dataCompletedRecipes, json.encode(list));
+  }
+
+  static Future<bool> addCompletedRecipe(String value) async {
+    var list = getCompletedRecipes();
+    list.add(value);
+    var prefs = await _instance;
+    return prefs.setString(_dataCompletedRecipes, json.encode(list));
+  }
+
+  static Future<bool> removeCompletedRecipe(String value) async {
+    var list = getCompletedRecipes();
+    list.remove(value);
+    var prefs = await _instance;
+    return prefs.setString(_dataCompletedRecipes, json.encode(list));
   }
 
   static RecipeType getRecipeType() {

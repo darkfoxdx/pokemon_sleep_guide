@@ -35,15 +35,15 @@ class UserSetting extends ChangeNotifier {
   }
 
   final Map<String, int> _userIngredients = {};
-  final Map<String, bool> _completedRecipes = {};
+  final List<String> _completedRecipes = [];
   final List<String> _filteredIngredients = [];
   RecipeType _recipeType = RecipeType.curry;
 
   UnmodifiableMapView<String, int> get userIngredients =>
       UnmodifiableMapView(_userIngredients);
 
-  UnmodifiableMapView<String, bool> get completedRecipes =>
-      UnmodifiableMapView(_completedRecipes);
+  UnmodifiableListView<String> get completedRecipes =>
+      UnmodifiableListView(_completedRecipes);
 
   UnmodifiableListView<String> get filteredIngredients =>
       UnmodifiableListView(_filteredIngredients);
@@ -57,7 +57,7 @@ class UserSetting extends ChangeNotifier {
     if (data != null) {
       var json = jsonDecode(data);
       _userIngredients.addAll(Map.castFrom(json["userIngredients"]));
-      _completedRecipes.addAll(Map.castFrom(json["completedRecipes"]));
+      _completedRecipes.addAll(List.castFrom(json["completedRecipes"]));
     } else {
       _userIngredients.addAll(PreferenceUtils.getUserIngredients());
       _completedRecipes.addAll(PreferenceUtils.getCompletedRecipes());
@@ -120,8 +120,13 @@ class UserSetting extends ChangeNotifier {
   }
 
   void setCompletedRecipe(String key, bool completed) {
-    _completedRecipes[key] = completed;
-    PreferenceUtils.setCompletedRecipe(key, completed);
+    if (completed) {
+      _completedRecipes.add(key);
+      PreferenceUtils.addCompletedRecipe(key);
+    } else {
+      _completedRecipes.remove(key);
+      PreferenceUtils.removeCompletedRecipe(key);
+    }
     notifyListeners();
   }
 

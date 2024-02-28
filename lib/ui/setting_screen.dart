@@ -14,13 +14,27 @@ class SettingScreen extends StatelessWidget {
     var data = Provider.of<UserSetting>(context).exportData;
     var json = jsonEncode(data);
     var encoded = Uri.encodeComponent(json);
+
+    var base64 = base64Encode(utf8.encode(json));
+    var encodedBase64 = Uri.encodeComponent(base64);
     Uri uri = Uri(
       scheme: Uri.base.scheme,
       port: Uri.base.port,
       host: Uri.base.host,
       pathSegments: Uri.base.pathSegments,
       queryParameters: <String, String>{
-        'data': encoded,
+        'd': encoded,
+      },
+    );
+
+    Uri base64Uri = Uri(
+      scheme: Uri.base.scheme,
+      port: Uri.base.port,
+      host: Uri.base.host,
+      pathSegments: Uri.base.pathSegments,
+      queryParameters: <String, String>{
+        'd': encodedBase64,
+        'e': '1'
       },
     );
 
@@ -58,6 +72,21 @@ class SettingScreen extends StatelessWidget {
                   }
                 },
                 child: const Text('Copy url'),
+              ),
+              const SizedBox(width: 16.0),
+              ElevatedButton(
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: base64Uri.toString()));
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        content: Text("Shorten url has been copied"),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Copy shorten url'),
               ),
             ],
           ),

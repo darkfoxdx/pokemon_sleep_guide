@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/data_notifier.dart';
@@ -15,7 +17,11 @@ void main() async {
 
   // Initialize SharedPrefs instance.
   await PreferenceUtils.init();
-  var data = Uri.base.queryParameters["data"];
+  var data = Uri.base.queryParameters['d'];
+  var isEncoded = Uri.base.queryParameters['e'] == '1' ? true : false;
+  if (isEncoded && data != null) {
+    data = utf8.decode(base64Decode(data));
+  }
   var decode = data != null ? Uri.decodeComponent(data) : null;
 
   html.window.history.pushState({}, '', Uri.base.path);
