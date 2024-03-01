@@ -32,10 +32,7 @@ class SettingScreen extends StatelessWidget {
       port: Uri.base.port,
       host: Uri.base.host,
       pathSegments: Uri.base.pathSegments,
-      queryParameters: <String, String>{
-        'd': encodedBase64,
-        'e': '1'
-      },
+      queryParameters: <String, String>{'d': encodedBase64, 'e': '1'},
     );
 
     return Padding(
@@ -46,9 +43,10 @@ class SettingScreen extends StatelessWidget {
         children: [
           Text(
             'Export',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                decoration: TextDecoration.underline
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(decoration: TextDecoration.underline),
           ),
           const SizedBox(height: 8.0),
           Row(
@@ -76,7 +74,8 @@ class SettingScreen extends StatelessWidget {
               const SizedBox(width: 16.0),
               ElevatedButton(
                 onPressed: () async {
-                  await Clipboard.setData(ClipboardData(text: base64Uri.toString()));
+                  await Clipboard.setData(
+                      ClipboardData(text: base64Uri.toString()));
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -93,18 +92,33 @@ class SettingScreen extends StatelessWidget {
           const SizedBox(height: 24.0),
           Text(
             'Contact',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                decoration: TextDecoration.underline
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(decoration: TextDecoration.underline),
           ),
           const SizedBox(height: 8.0),
+          Row(
+            children: [
+              const Text('Twitter:'),
+              const SizedBox(width: 8.0),
+              TextButton(
+                onPressed: () async {
+                  await launchUrl(
+                      Uri.parse('https://twitter.com/darkfoxdx'));
+                },
+                child: const Text('Patreon'),
+              ),
+            ],
+          ),
           Row(
             children: [
               const Text('E-mail:'),
               const SizedBox(width: 8.0),
               TextButton(
                 onPressed: () async {
-                  await Clipboard.setData(const ClipboardData(text: 'eugene.ws.low@gmail.com'));
+                  await Clipboard.setData(
+                      const ClipboardData(text: 'eugene.ws.low@gmail.com'));
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -118,21 +132,30 @@ class SettingScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24.0),
-          Text(
-            'Support',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              decoration: TextDecoration.underline
-            ),
+          Row(
+            children: [
+              const Text('Icon by:'),
+              const SizedBox(width: 8.0),
+              TextButton(
+                onPressed: () async => await launchUrl(
+                    Uri.parse('https://elisewongcreations.com')),
+                child: const Text('Elise Wong Creations'),
+              ),
+            ],
           ),
-          const SizedBox(height: 8.0),
-          TextButton(
-            onPressed: () async {
-              await launchUrl(Uri.parse('https://patreon.com/ProjectEugene'));
-            },
-            child: const Text('Patreon'),
+          Row(
+            children: [
+              const Text('Support me on:'),
+              const SizedBox(width: 8.0),
+              TextButton(
+                onPressed: () async {
+                  await launchUrl(
+                      Uri.parse('https://patreon.com/ProjectEugene'));
+                },
+                child: const Text('Patreon'),
+              ),
+            ],
           ),
-          const SizedBox(height: 8.0),
         ],
       ),
     );

@@ -17,6 +17,10 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 8.0),
+            child: Image.asset('assets/icon.png'),
+          ),
           title: const Text('Pokemon Sleep'),
         ),
         body: Center(
