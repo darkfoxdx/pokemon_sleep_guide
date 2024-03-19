@@ -68,7 +68,7 @@ class _IngredientItemState extends State<IngredientItem> {
           ),
         ),
         Align(
-          alignment: AlignmentDirectional.bottomEnd,
+          alignment: AlignmentDirectional.topEnd,
           child: Card(
             color: Theme.of(context).colorScheme.white,
             child: SizedBox(
@@ -90,7 +90,7 @@ class _IngredientItemState extends State<IngredientItem> {
         Visibility(
           visible: widget.quantity > 0,
           child: Align(
-            alignment: AlignmentDirectional.topEnd,
+            alignment: AlignmentDirectional.topStart,
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: () {
