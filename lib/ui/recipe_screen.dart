@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_guide/ui/bookmark_filter.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_ingredients_filter.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_item.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_tabs.dart';
+import 'package:pokemon_sleep_guide/ui/sort_tool.dart';
 import 'package:provider/provider.dart';
 
 class RecipeScreen extends StatelessWidget {
@@ -31,6 +32,10 @@ class RecipeScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 child: BookmarkFilter(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: SortTool(),
               ),
             ],
           ),

@@ -2,6 +2,8 @@ import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:pokemon_sleep_guide/model/bookmark_state.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
+import 'package:pokemon_sleep_guide/model/sort_order.dart';
+import 'package:pokemon_sleep_guide/model/sort_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtils {
@@ -20,6 +22,9 @@ class PreferenceUtils {
   static const _dataCompletedRecipes = "completed_recipes";
   static const _dataFilteredIngredients = "filtered_out_ingredients";
   static const _dataBookmarkState = "bookmark_state";
+  static const _dateSortType = "sort_type";
+  static const _dateSortOrder = "sort_order";
+
 
   static List<String> getFilteredIngredients() {
     var listString = _prefsInstance?.getString(_dataFilteredIngredients);
@@ -123,5 +128,25 @@ class PreferenceUtils {
   static Future<bool> setBookmarkState(BookmarkState state) async {
     var prefs = await _instance;
     return prefs.setInt(_dataBookmarkState, state.index);
+  }
+
+  static SortOrder getSortOrder() {
+    int sortOrder = _prefsInstance?.getInt(_dateSortOrder) ?? 0;
+    return SortOrder.values[sortOrder];
+  }
+
+  static Future<bool> setSortOrder(SortOrder sortOrder) async {
+    var prefs = await _instance;
+    return prefs.setInt(_dateSortOrder, sortOrder.index);
+  }
+
+  static SortType getSortType() {
+    int sortType = _prefsInstance?.getInt(_dateSortType) ?? 0;
+    return SortType.values[sortType];
+  }
+
+  static Future<bool> setSortType(SortType sortType) async {
+    var prefs = await _instance;
+    return prefs.setInt(_dateSortType, sortType.index);
   }
 }

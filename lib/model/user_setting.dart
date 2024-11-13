@@ -8,6 +8,8 @@ import 'package:pokemon_sleep_guide/model/ingredient.dart';
 import 'package:pokemon_sleep_guide/model/recipe.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
+import 'package:pokemon_sleep_guide/model/sort_order.dart';
+import 'package:pokemon_sleep_guide/model/sort_type.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 
 class UserSetting extends ChangeNotifier {
@@ -35,11 +37,16 @@ class UserSetting extends ChangeNotifier {
     notifyListeners();
   }
 
+  SortOrder _sortOrder = SortOrder.asc;
+  SortType _sortType = SortType.avail;
   final Map<String, int> _userIngredients = {};
   final List<String> _completedRecipes = [];
   final List<String> _filteredIngredients = [];
   RecipeType _recipeType = RecipeType.curry;
   BookmarkState _bookmarkState = BookmarkState.all;
+
+  SortOrder get sortOrder => _sortOrder;
+  SortType get sortType => _sortType;
 
   UnmodifiableMapView<String, int> get userIngredients =>
       UnmodifiableMapView(_userIngredients);
@@ -103,6 +110,20 @@ class UserSetting extends ChangeNotifier {
   void removeFilteredIngredient(String name) {
     _filteredIngredients.remove(name);
     PreferenceUtils.removeFilteredIngredient(name);
+    notifyListeners();
+  }
+
+  void setSortType(SortType sortType) {
+    _sortType = sortType;
+    PreferenceUtils.setSortType(sortType);
+    notifyListeners();
+  }
+
+  void toggleSortOrder() {
+    List<SortOrder> orders = SortOrder.values;
+    int newIndex = (_sortOrder.index + 1) % orders.length;
+    _sortOrder = orders[newIndex];
+    PreferenceUtils.setSortOrder(orders[newIndex]);
     notifyListeners();
   }
 
@@ -174,6 +195,21 @@ class UserSetting extends ChangeNotifier {
     selectedRecipe.sort((b, a) => a
         .ingredientValue(_userIngredients)
         .compareTo(b.ingredientValue(_userIngredients)));
+
+    if (_sortType == SortType.variety) {
+      selectedRecipe.sort((a, b) => a
+          .ingredients.length
+          .compareTo(b.ingredients.length));
+    } else if (_sortType == SortType.total) {
+      selectedRecipe.sort((a, b) => a
+          .totalIngredients
+          .compareTo(b.totalIngredients));
+    }
+
+    if (_sortOrder == SortOrder.desc) {
+      return selectedRecipe.reversed.toList();
+    }
+
     return selectedRecipe;
   }
 
