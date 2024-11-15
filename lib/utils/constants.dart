@@ -3,4 +3,5 @@ class Constants {
   static const serebiiBaseUrl = "https://www.serebii.net";
   static const serebiiDishesUrl = "/pokemonsleep/dishes.shtml";
   static const serebiiIngredientsUrl = "/pokemonsleep/ingredients.shtml";
+  static const potSize = [15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69];
 }

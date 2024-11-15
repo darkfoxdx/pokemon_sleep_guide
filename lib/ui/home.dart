@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_guide/model/tab_notifier.dart';
 import 'package:pokemon_sleep_guide/ui/ingredient_screen.dart';
+import 'package:pokemon_sleep_guide/ui/optimize_screen.dart';
 import 'package:pokemon_sleep_guide/ui/recipe_screen.dart';
 import 'package:pokemon_sleep_guide/ui/setting_screen.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,7 @@ class Home extends StatelessWidget {
               children: const [
                 IngredientScreen(),
                 RecipeScreen(),
+                OptimizeScreen(),
                 SettingScreen(),
               ],
             );
@@ -46,6 +48,10 @@ class Home extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.menu_book),
                 label: 'Recipes',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calculate),
+                label: 'Optimize',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),

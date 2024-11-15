@@ -10,6 +10,7 @@ import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/model/recipes.dart';
 import 'package:pokemon_sleep_guide/model/sort_order.dart';
 import 'package:pokemon_sleep_guide/model/sort_type.dart';
+import 'package:pokemon_sleep_guide/utils/constants.dart';
 import 'package:pokemon_sleep_guide/utils/preference_utils.dart';
 
 class UserSetting extends ChangeNotifier {
@@ -37,6 +38,7 @@ class UserSetting extends ChangeNotifier {
     notifyListeners();
   }
 
+  int _optimizePotSize = Constants.potSize[0];
   SortOrder _sortOrder = SortOrder.asc;
   SortType _sortType = SortType.avail;
   final Map<String, int> _userIngredients = {};
@@ -44,6 +46,8 @@ class UserSetting extends ChangeNotifier {
   final List<String> _filteredIngredients = [];
   RecipeType _recipeType = RecipeType.curry;
   BookmarkState _bookmarkState = BookmarkState.all;
+
+  int get optimizePotSize => _optimizePotSize;
 
   SortOrder get sortOrder => _sortOrder;
   SortType get sortType => _sortType;
@@ -65,6 +69,7 @@ class UserSetting extends ChangeNotifier {
     _recipeType = PreferenceUtils.getRecipeType();
     _bookmarkState = PreferenceUtils.getBookmarkState();
     _filteredIngredients.addAll(PreferenceUtils.getFilteredIngredients());
+    _optimizePotSize = PreferenceUtils.getOptimizePotSize();
 
     if (data != null) {
       var json = jsonDecode(data);
@@ -110,6 +115,12 @@ class UserSetting extends ChangeNotifier {
   void removeFilteredIngredient(String name) {
     _filteredIngredients.remove(name);
     PreferenceUtils.removeFilteredIngredient(name);
+    notifyListeners();
+  }
+
+  void setOptimizePotSize(int potSize) {
+    _optimizePotSize = potSize;
+    PreferenceUtils.setOptimizePotSize(potSize);
     notifyListeners();
   }
 
@@ -169,6 +180,37 @@ class UserSetting extends ChangeNotifier {
       case RecipeType.dessert:
         return recipes.dessertDishes;
     }
+  }
+
+  List<Recipe> generateOptimizeList() {
+    List<Recipe> buildableRecipe = [];
+    List<Recipe> copyRecipe = List.from(getList());
+    copyRecipe.removeWhere
+      ((element) => element.ingredients.isEmpty
+        || element.totalIngredients > optimizePotSize);
+    // Sort by total ingredients with most first
+    copyRecipe.sort((b, a) => a
+        .totalIngredients
+        .compareTo(b.totalIngredients));
+    Map<String, int> copyIngredients =  Map.from(_userIngredients);
+    for (var recipe in copyRecipe) {
+      var amount = 99999;
+      for (var ingredient in recipe.ingredients) {
+        int multiply = (copyIngredients[ingredient.name] ?? 0) ~/ ingredient.quantity;
+        if (multiply < amount) amount = multiply;
+      }
+      if (amount >= 0) {
+        for (var ingredient in recipe.ingredients) {
+          copyIngredients[ingredient.name] =
+              (copyIngredients[ingredient.name] ?? 0) -
+                  (ingredient.quantity * amount);
+        }
+        for (int i = 0; i < amount; i++) {
+          buildableRecipe.add(recipe);
+        }
+      }
+    }
+    return buildableRecipe;
   }
 
   List<Recipe> generateCurrentList() {

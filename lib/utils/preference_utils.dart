@@ -4,6 +4,7 @@ import 'package:pokemon_sleep_guide/model/bookmark_state.dart';
 import 'package:pokemon_sleep_guide/model/recipe_type.dart';
 import 'package:pokemon_sleep_guide/model/sort_order.dart';
 import 'package:pokemon_sleep_guide/model/sort_type.dart';
+import 'package:pokemon_sleep_guide/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtils {
@@ -24,6 +25,7 @@ class PreferenceUtils {
   static const _dataBookmarkState = "bookmark_state";
   static const _dateSortType = "sort_type";
   static const _dateSortOrder = "sort_order";
+  static const _dataOptimizePotSize = "optimize_pot_size";
 
 
   static List<String> getFilteredIngredients() {
@@ -148,5 +150,15 @@ class PreferenceUtils {
   static Future<bool> setSortType(SortType sortType) async {
     var prefs = await _instance;
     return prefs.setInt(_dateSortType, sortType.index);
+  }
+
+  static int getOptimizePotSize() {
+    int optimizePotSize = _prefsInstance?.getInt(_dataOptimizePotSize) ?? Constants.potSize[0];
+    return optimizePotSize;
+  }
+
+  static Future<bool> setOptimizePotSize(int potSize) async {
+    var prefs = await _instance;
+    return prefs.setInt(_dataOptimizePotSize, potSize);
   }
 }
