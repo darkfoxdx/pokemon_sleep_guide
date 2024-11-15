@@ -61,6 +61,7 @@ class Home extends StatelessWidget {
             currentIndex: tab.selectedIndex,
             selectedItemColor: Colors.amber[800],
             onTap: (index) => _onItemTapped(context, index),
+            type: BottomNavigationBarType.fixed,
           );
         }),
       ),
